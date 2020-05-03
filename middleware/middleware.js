@@ -1,8 +1,6 @@
 // local modules
 const logger = require('../log');
-const data = require('../datahandler/dataHandler');
-
-var numStations = data.getNumOfStations();
+//const data = require('../datahandler/dataHandler');
 
 // Middleware
 // NOTE: this order is important
@@ -19,6 +17,7 @@ module.exports = {
   // simple validation with some hardcoded and arbitrary values
   jsonValidated: (req, res, next) => {
     let b = req.body;
+    //let numStations = data.getNumOfStations();
 
     if (!b.hasOwnProperty('api_key') || !b.hasOwnProperty('id')) {
       // return bad request
@@ -33,13 +32,13 @@ module.exports = {
     }
 
     if (typeof b.id === 'string') {
-      if ((typeof parseInt(b.id, 10) !== 'number') || (b.id > 4)) {
+      if ((typeof parseInt(b.id, 10) !== 'number') || (b.id.length > 4)) {
         // return bad request
         logger.info('Could not validate provided station ID number');
         return res.status(400).send("Bad request");
       }
     } else if (Array.isArray(b.id)) {
-      if (b.id.length >= numStations) {
+      if (b.id.length >= 1024) {
         // return bad request
         logger.info('Could not validate provided station ID array');
         return res.status(400).send("Bad request");

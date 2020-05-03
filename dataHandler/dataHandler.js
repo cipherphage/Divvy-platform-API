@@ -66,6 +66,7 @@ module.exports = {
       res.on('end', () => {
         try{
           stations = JSON.parse(data);
+          console.log(stations.data.stations.length);
         } catch (e) {
           logger.error(e.message);
         }
@@ -86,39 +87,96 @@ module.exports = {
     })();
   },
   getNumOfStations: function() {
-    return stations.data.stations.length;
+    console.log('initializing this function');
+    let n = stations.data.stations.length;
+    return n;
   },
   getStation: async function(id) {
+    let t;
     stations.data.stations.forEach(s => {
-      if (s['station-id'] === id) {
-        return s;
+      if (s['station_id'] === id) {
+        t = s;
       }
     });
+
+    if (t) {
+      return t;
+    }
     logger.error(`No station with ID ${id} found`);
     return {"Error": `No station with ID ${id} found`};
   },
-  getRider: async function() {
-    // if (typeof id === 'string') {
-    //   let results = [];
-    //   csv.forEach(r => {
-    //     console.log(r);
-    //     if ((r['03 - Rental Start Station ID'] === id) ||
-    //       (r['02 - Rental End Station ID'] === id)) {
-    //         results.push(r);
-    //       }
-    //   });
-    // } else if (Array.isArray(id)) {
-    //   let results = [];
-    //   id.forEach(d => {
-    //     csv.forEach(r => {
-    //       if ((r['03 - Rental Start Station ID'] === d) ||
-    //         (r['02 - Rental End Station ID'] === d)) {
-    //           results.push(r);
-    //         }
-    //     });
-    //   });
-    // }
-    // return results;
+  getRider: async function(id, d) {
+    let date = new Date(Date.now());
+    let ty = parseInt(date.getFullYear(),10);
+    let results = {
+      "date": d,
+      "stations": {}
+    };
+    let riderBuckets = (r, id) => {
+      if ((r['02 - Rental End Station ID'] === id) && 
+        (r['01 - Rental Details Local End Time'].split(' ')[0] === d)) {
+        let ages = {
+          "0-20": 0,
+          "21-30": 0,
+          "31-40": 0,
+          "41-50": 0,
+          "51+": 0,
+          "unknown": 0
+        };
+
+        if (r.hasOwnProperty('05 - Member Details Member Birthday Year')) {
+          let a = ty - parseInt(r['05 - Member Details Member Birthday Year'],10);
+
+          if (results.stations.hasOwnProperty(id)) {
+            if (a < 21) {
+              results.stations[id]["0-20"] += 1;
+            } else if (a < 31) {
+              results.stations[id]["21-30"] += 1;
+            } else if (a < 41) {
+              results.stations[id]["31-40"] += 1;
+            } else if (a < 51) {
+              results.stations[id]["41-50"] += 1;
+            } else {
+              results.stations[id]["51+"] += 1;
+            }
+          } else {
+            results.stations[id] = ages;
+            if (a < 21) {
+              results.stations[id]["0-20"] += 1;
+            } else if (a < 31) {
+              results.stations[id]["21-30"] += 1;
+            } else if (a < 41) {
+              results.stations[id]["31-40"] += 1;
+            } else if (a < 51) {
+              results.stations[id]["41-50"] += 1;
+            } else {
+              results.stations[id]["51+"] += 1;
+            }
+          }
+        } else {
+          if (results.stations.hasOwnProperty(id)) {
+            results.stations[id]["unknown"] += 1;
+          } else {
+            results.stations[id] = ages;
+            results.stations[id]["unknown"] += 1;
+          }
+        }
+      }
+    };
+
+    if (typeof id === 'string') {
+      csv.forEach(r => {
+        riderBuckets(r, id);
+      });
+    } else if (Array.isArray(id)) {
+      let results = [];
+      id.forEach(d => {
+        csv.forEach(r => {
+          riderBuckets(r, id);
+        });
+      });
+    }
+    return results;
   },
   getTrip: async function() {
 

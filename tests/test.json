@@ -19,3 +19,24 @@
     "ios":"https://chi.lft.to/lastmile_qr_scan"
   }
 }
+{
+  "eightd_has_key_dispenser":false,
+  "lat":41.87651122881695,
+  "short_name":"15541",
+  "name":"Buckingham Fountain",
+  "electric_bike_surcharge_waiver":false,
+  "rental_uris":{
+    "ios":"https://chi.lft.to/lastmile_qr_scan",
+    "android":"https://chi.lft.to/lastmile_qr_scan"
+  },
+  "external_id":"a3a36d9e-a135-11e9-9cda-0a87ae2ba916",
+  "has_kiosk":true,
+  "capacity":39,
+  "lon":-87.62054800987242,
+  "station_id":"2",
+  "rental_methods":[
+    "KEY","TRANSITCARD","CREDITCARD"
+  ],
+  "eightd_station_services":[],
+  "station_type":"classic"
+}

@@ -12,10 +12,12 @@
   - `docker logs <container id>`
 
 ## Use
+- Wait for data to be initialized before making requests (look for "Data initialized" in terminal or in `combined.log`);
 - `localhost:8080` routes:
   - `/station` POST, accepts a station ID (number).
-  - `/rider` POST, accepts a station ID (number) or IDs (array) and a date (string).
-  - `/trip` POST, accepts a station ID (number) or IDs (array) and a date (string).
+  - `/rider` POST, accepts a station ID (number) or IDs (array) and an optional date (string: YYYY-MM-DD).
+  - `/trip` POST, accepts a station ID (number) or IDs (array) and an optional date (string: YYYY-MM-DD).
+  - Note: if no date is provided, then yesterday is assumed.
 
 ## Basic structure
 - `server.js` calls Express app.
@@ -33,7 +35,7 @@
 
 ## Notes
 - I'm rolling my own VERY basic token auth and input validation, but there are much better, more robust solutions, of course.
-- One way to make the CSV look-up faster would be to divide the CSV up into files by day. Or store the data in a SQL database instead of a CSV file.
+- To make the CSV look-up faster we could divide the CSV up into files by day, and/or create workers to perform the lookup, and/or store the data in a SQL database instead of a CSV file. 
 - Please see comments in the code.
 
 [1]:https://gbfs.divvybikes.com/gbfs/en/station_information.json
