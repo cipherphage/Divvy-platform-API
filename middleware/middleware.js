@@ -70,7 +70,7 @@ module.exports = {
   // basic key auth, not recommended for production
   isAuthorized: (req, res, next) => {
     let b = req.body;
-    if (b.api_key = process.env.API_KEY) {
+    if (b.api_key === process.env.API_KEY) {
       return next();
     }
     // return forbidden

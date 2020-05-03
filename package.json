@@ -4,6 +4,7 @@
   "description": "Divvy API Endpoint on Node.js and Docker",
   "main": "server.js",
   "scripts": {
+    "test": "mocha 'test/**/*.js' --timeout 60000 --reporter nyan",
     "start": "node server.js"
   },
   "dependencies": {
@@ -11,5 +12,9 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "winston": "^3.2.1"
+  },
+  "devDependencies": {
+    "mocha": "^7.1.2",
+    "supertest": "^4.0.2"
   }
 }

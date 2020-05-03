@@ -32,9 +32,11 @@
 - `express` the light-weight web server framework.
 - `winston` for logging.
 - `csvtojson` a library for parsing and doing other things with CSVs.
+- `mocha` and `supertest` to test. Run `npm test` to run the tests (note: it runs on a timeout so please give it some time (it waits for the data to be initialized)).
 
 ## Notes
 - I'm rolling my own VERY basic token auth and input validation, but there are much better, more robust solutions, of course.
+- To make start-up faster, consider converting the CSV into JSON and not using CSV at all.
 - To make the CSV look-up faster we could divide the CSV up into files by day, and/or create workers to perform the lookup, and/or store the data in a SQL database instead of a CSV file. 
 - Please see comments in the code.
 

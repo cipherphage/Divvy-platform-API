@@ -13,16 +13,22 @@ const dh = require('./dataHandler/dataHandler');
 const PORT = 8080;
 const HOST = 'localhost';
 
+const app = express();
+
+app.use(express.json());
+
+app.use('/', router);
+
 // ready the data
 dh.init(() => {
   console.log('Data initialized');
   logger.info('Data initialized');
-  // App
-  const app = express();
-  app.use(express.json());
 
-  app.use('/', router);
-
-  app.listen(PORT, HOST);
-  logger.info(`Running on http://${HOST}:${PORT}`);
+  app.listen(PORT, HOST, () => {
+    console.log(`Running on http://${HOST}:${PORT}`);
+    logger.info(`Running on http://${HOST}:${PORT}`);
+    app.emit('data initialized');
+  });
 });
+
+module.exports = app;
