@@ -1,0 +1,21 @@
+{
+  "rental_methods":[
+    "TRANSITCARD","CREDITCARD","KEY"
+  ],
+  "lon":-87.626488,
+  "lat":41.852619,
+  "external_id":"a3a43a25-a135-11e9-9cda-0a87ae2ba916",
+  "short_name":"TA1305000001",
+  "name":"Wabash Ave & Cermak Rd",
+  "eightd_has_key_dispenser":false,
+  "has_kiosk":true,
+  "electric_bike_surcharge_waiver":false,
+  "station_type":"classic",
+  "eightd_station_services":[],
+  "capacity":11,
+  "station_id":"42",
+  "rental_uris":{
+    "android":"https://chi.lft.to/lastmile_qr_scan",
+    "ios":"https://chi.lft.to/lastmile_qr_scan"
+  }
+}
