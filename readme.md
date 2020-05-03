@@ -10,9 +10,9 @@
   - It is built automatically from this github repo so I believe it doesn't have a `.env` file nor does it have the CSV file which contains most of our data. You will need to add those and maybe map port 8080 to a local port and change the `HOST` environment variable from `localhost` to `0.0.0.0`.
   - You can also build it locally from the repo:
     - `docker build -t <user>/divvy_platform_api .`
-    - `docker run -p 49160:8080 -d <user>/divvy_platform_api` 
+    - `docker run -p 8080:8080 -d <user>/divvy_platform_api` 
     - `docker ps`
-    - `docker logs <container id>`
+    - `docker logs <container id>` (note: the logs will be empty until the data is initialized, after which you'll see `Data initialized` and then immediately afterward `Running on http://0.0.0.0:8080`)
 
 ## Use
 - The server waits for the data to be initialized before listening for requests. If you set `NODE_ENV` to 'production' then it will spawn workers.
