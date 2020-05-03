@@ -1,26 +1,28 @@
 # Divvy Chicago Bike Platform API Endpoint
 
 ## Setup
-- `server.js` calls the Divvy station information endpoint: [https://gbfs.divvybikes.com/gbfs/en/station_information.json][1]
-- It also uses a locally stored CSV file (1,108,164 lines) which can be downloaded here (not included in repo): [https://s3.amazonaws.com/divvy-data/tripdata/Divvy_Trips_2019_Q2.zip][2]
-- Uses `.env` file to store API key as `API_KEY`.
-- The app runs on `node start`, in browser go to `localhost:8080`.
+- `dataHandler.js` calls the Divvy station information endpoint: [https://gbfs.divvybikes.com/gbfs/en/station_information.json][1]
+- Uses a locally stored CSV file (1,108,164 lines) which can be downloaded here (not included in repo): [https://s3.amazonaws.com/divvy-data/tripdata/Divvy_Trips_2019_Q2.zip][2]
+- Uses `.env` file to store API key as `API_KEY` and environment as `NODE_ENV`.
+- The app runs on `node server.js` or `npm start`.
 - The app is also Dockerized so you could do:
-  - `docker build -t <user>/divvy_platform_api`
+  - `docker build -t <user>/divvy_platform_api .`
   - `docker run -p 49160:8080 -d <user>/divvy_platform_api` 
   - `docker ps`
   - `docker logs <container id>`
 
 ## Use
-- Wait for data to be initialized before making requests (look for "Data initialized" in terminal or in `combined.log`);
+- The server waits for the data to be initialized before listening for requests. If you set `NODE_ENV` to 'production' then it will spawn workers.
 - `localhost:8080` routes:
   - `/station` POST, accepts a station ID (number).
   - `/rider` POST, accepts a station ID (number) or IDs (array) and an optional date (string: YYYY-MM-DD).
   - `/trip` POST, accepts a station ID (number) or IDs (array) and an optional date (string: YYYY-MM-DD).
-  - Note: if no date is provided, then yesterday is assumed.
+  - Note: if no date is provided, then yesterday is assumed. This should be changed because the data does not cover recent dates.
+- Run `npm test` to run the tests (note: you must change the `NODE_ENV` in `.env` to anything other than 'production'. Also, it runs on a timeout so please give it some time (it waits for the data to be initialized)).
+  - `npm test` runs `mocha 'test/**/*.js' --timeout 60000 --reporter nyan`. The `NODE_ENV` in `.env` needs to be anything other than 'production' otherwise the tests will attempt to test each worker and fail to find a port.
 
 ## Basic structure
-- `server.js` calls Express app.
+- `server.js` calls Express app and forks child processes as per # of CPUs. This is a naive implementation of the cluster module. A library like [pm2][3] should be used in production.
 - `/router/router.js` is where the routes live.
 - `/middleware/middleware.js` is where middleware lives (basic token auth, 404 handler, and input validation).
 - `/dataHandler/dataHandler.js` is where all data processing happens.
@@ -32,13 +34,13 @@
 - `express` the light-weight web server framework.
 - `winston` for logging.
 - `csvtojson` a library for parsing and doing other things with CSVs.
-- `mocha` and `supertest` to test. Run `npm test` to run the tests (note: it runs on a timeout so please give it some time (it waits for the data to be initialized)).
+- `mocha` and `supertest` to test. 
 
 ## Notes
 - I'm rolling my own VERY basic token auth and input validation, but there are much better, more robust solutions, of course.
 - To make start-up faster, consider converting the CSV into JSON and not using CSV at all.
 - To make the CSV look-up faster we could divide the CSV up into files by day, and/or create workers to perform the lookup, and/or store the data in a SQL database instead of a CSV file. 
-- Please see comments in the code.
-
+  
 [1]:https://gbfs.divvybikes.com/gbfs/en/station_information.json
 [2]:https://s3.amazonaws.com/divvy-data/tripdata/Divvy_Trips_2019_Q2.zip
+[3]:https://pm2.io/
