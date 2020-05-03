@@ -3,6 +3,7 @@
 ## Setup
 - `dataHandler.js` calls the Divvy station information endpoint: [https://gbfs.divvybikes.com/gbfs/en/station_information.json][1]
 - Uses a locally stored CSV file (1,108,164 lines) which can be downloaded here (not included in repo): [https://s3.amazonaws.com/divvy-data/tripdata/Divvy_Trips_2019_Q2.zip][2]
+  - It expects a file called `Divvy_Trips_2019_Q2.csv` in the project root.
 - Uses `.env` file to store API key as `API_KEY` and environment as `NODE_ENV`. I added `PORT` and `HOST` to help with using Docker.
 - The app runs on `node server.js` or `npm start`.
 - You can download a docker image here: [https://hub.docker.com/r/cipherphage/divvy-platform-api][4]
