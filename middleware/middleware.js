@@ -41,21 +41,29 @@ module.exports = {
     } else if (Array.isArray(b.id)) {
       if (b.id.length >= numStations) {
         // return bad request
-        logger.info('Could not validate provided station ID number');
+        logger.info('Could not validate provided station ID array');
         return res.status(400).send("Bad request");
       }
 
       b.id.forEach(id => {
         if ((typeof parseInt(id, 10) !== 'number') || (id.length > 4)) {
           // return bad request
-          logger.info('Could not validate provided station ID number');
+          logger.info('Could not validate provided station ID array');
           return res.status(400).send("Bad request");
         }
       });
     } else {
       // return bad request
-      logger.info('Could not validate provided station ID number');
+      logger.info('Could not validate provided station ID');
       return res.status(400).send("Bad request");
+    }
+
+    if (b.hasOwnProperty('date')) {
+      if (b.date.length > 20) {
+        // return bad request
+      logger.info('Could not validate provided date string');
+      return res.status(400).send("Bad request");
+      }
     }
     
     return next();

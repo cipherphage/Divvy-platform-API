@@ -13,9 +13,9 @@
 
 ## Use
 - `localhost:8080` routes:
-  - `/station` POST, accepts 
-  - `/rider` POST, 
-  - `/trip` POST, 
+  - `/station` POST, accepts a station ID (number).
+  - `/rider` POST, accepts a station ID (number) or IDs (array) and a date (string).
+  - `/trip` POST, accepts a station ID (number) or IDs (array) and a date (string).
 
 ## Basic structure
 - `server.js` calls Express app.
@@ -33,6 +33,7 @@
 
 ## Notes
 - I'm rolling my own VERY basic token auth and input validation, but there are much better, more robust solutions, of course.
+- One way to make the CSV look-up faster would be to divide the CSV up into files by day. Or store the data in a SQL database instead of a CSV file.
 - Please see comments in the code.
 
 [1]:https://gbfs.divvybikes.com/gbfs/en/station_information.json
