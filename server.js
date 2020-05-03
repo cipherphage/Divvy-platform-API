@@ -10,8 +10,8 @@ const logger = require('./log');
 const router = require('./router/router');
 const dh = require('./dataHandler/dataHandler');
 
-const PORT = 8080;
-const HOST = 'localhost';
+const PORT = process.env.PORT ? process.env.PORT : 8080;
+const HOST = process.env.HOST ? process.env.HOST : 'localhost';
 const app = express();
 
 app.use(express.json());

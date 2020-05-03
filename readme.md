@@ -3,13 +3,15 @@
 ## Setup
 - `dataHandler.js` calls the Divvy station information endpoint: [https://gbfs.divvybikes.com/gbfs/en/station_information.json][1]
 - Uses a locally stored CSV file (1,108,164 lines) which can be downloaded here (not included in repo): [https://s3.amazonaws.com/divvy-data/tripdata/Divvy_Trips_2019_Q2.zip][2]
-- Uses `.env` file to store API key as `API_KEY` and environment as `NODE_ENV`.
+- Uses `.env` file to store API key as `API_KEY` and environment as `NODE_ENV`. I added `PORT` and `HOST` to help with using Docker.
 - The app runs on `node server.js` or `npm start`.
-- The app is also Dockerized so you could do:
-  - `docker build -t <user>/divvy_platform_api .`
-  - `docker run -p 49160:8080 -d <user>/divvy_platform_api` 
-  - `docker ps`
-  - `docker logs <container id>`
+- You can download a docker image here: [https://hub.docker.com/r/cipherphage/divvy-platform-api][4]
+  - It is built automatically from this github repo so I believe it doesn't have a `.env` file nor does it have the CSV file which contains most of our data. You will need to add those and maybe map port 8080 to a local port and change the `HOST` environment variable from `localhost` to `0.0.0.0`.
+  - You can also build it locally from the repo:
+    - `docker build -t <user>/divvy_platform_api .`
+    - `docker run -p 49160:8080 -d <user>/divvy_platform_api` 
+    - `docker ps`
+    - `docker logs <container id>`
 
 ## Use
 - The server waits for the data to be initialized before listening for requests. If you set `NODE_ENV` to 'production' then it will spawn workers.
@@ -44,3 +46,4 @@
 [1]:https://gbfs.divvybikes.com/gbfs/en/station_information.json
 [2]:https://s3.amazonaws.com/divvy-data/tripdata/Divvy_Trips_2019_Q2.zip
 [3]:https://pm2.io/
+[4]:https://hub.docker.com/r/cipherphage/divvy-platform-api
