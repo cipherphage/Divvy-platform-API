@@ -66,7 +66,6 @@ module.exports = {
       res.on('end', () => {
         try{
           stations = JSON.parse(data);
-          console.log(stations.data.stations.length);
         } catch (e) {
           logger.error(e.message);
         }
@@ -169,16 +168,71 @@ module.exports = {
         riderBuckets(r, id);
       });
     } else if (Array.isArray(id)) {
-      let results = [];
-      id.forEach(d => {
+      id.forEach(i => {
         csv.forEach(r => {
-          riderBuckets(r, id);
+          riderBuckets(r, i);
         });
       });
     }
-    return results;
-  },
-  getTrip: async function() {
 
+    let ck = Object.keys(results.stations).length;
+    if (ck > 0) {
+      return results;
+    }
+    logger.error(`No station with ID ${id} found for ${d}`);
+    return {"Error": `No station with ID ${id} found for ${d}`};
+  },
+  getTrip: async function(id, d) {
+    let results = {
+      "date": d,
+      "stations": {}
+    };
+    let tripBuckets = (r, id) => {
+      if ((r['02 - Rental End Station ID'] === id) && 
+        (r['01 - Rental Details Local End Time'].split(' ')[0] === d)) {
+        
+        if (results.stations.hasOwnProperty(id)) {
+          results.stations[id].push(r);
+        } else {
+          results.stations[id] = [];
+          results.stations[id].push(r);
+        }
+      }
+    };
+
+    if (typeof id === 'string') {
+      csv.forEach(r => {
+        tripBuckets(r, id);
+      });
+    } else if (Array.isArray(id)) {
+      id.forEach(i => {
+        csv.forEach(r => {
+          tripBuckets(r, i);
+        });
+      });
+    }
+
+    let compare = (a,b) => {
+      let da = Date.parse(a['01 - Rental Details Local End Time']);
+      let db = Date.parse(b['01 - Rental Details Local End Time']);
+      return da - db;
+    };
+
+    let rk = Object.keys(results.stations);
+    if (rk.length > 0) {
+      // check and filter if more than 20 results for an id
+      rk.forEach(k => {
+        if (results.stations[k].length > 20) {
+          // sort ascending
+          results.stations[k].sort(compare);
+          // remove older ones until only 20 left
+          let newArr = results.stations[k].slice(-20);
+          results.stations[k] = newArr;
+        }
+      });
+      return results;
+    }
+    logger.error(`No station with ID ${id} found for ${d}`);
+    return {"Error": `No station with ID ${id} found for ${d}`};
   }
 };
