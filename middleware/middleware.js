@@ -1,5 +1,8 @@
 // local modules
 const logger = require('../log');
+const data = require('../datahandler/dataHandler');
+
+var numStations = data.getNumOfStations();
 
 // Middleware
 // NOTE: this order is important
@@ -29,12 +32,30 @@ module.exports = {
       return res.status(400).send("Bad request");
     }
 
-    if (!Array.isArray(b.id) || (b.id.length > 512))  {
-      if ((typeof parseInt(b.id, 10) !== 'number') || (b.id > 24000000)) {
+    if (typeof b.id === 'string') {
+      if ((typeof parseInt(b.id, 10) !== 'number') || (b.id > 4)) {
         // return bad request
         logger.info('Could not validate provided station ID number');
         return res.status(400).send("Bad request");
       }
+    } else if (Array.isArray(b.id)) {
+      if (b.id.length >= numStations) {
+        // return bad request
+        logger.info('Could not validate provided station ID number');
+        return res.status(400).send("Bad request");
+      }
+
+      b.id.forEach(id => {
+        if ((typeof parseInt(id, 10) !== 'number') || (id.length > 4)) {
+          // return bad request
+          logger.info('Could not validate provided station ID number');
+          return res.status(400).send("Bad request");
+        }
+      });
+    } else {
+      // return bad request
+      logger.info('Could not validate provided station ID number');
+      return res.status(400).send("Bad request");
     }
     
     return next();

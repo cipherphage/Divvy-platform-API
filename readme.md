@@ -20,9 +20,10 @@
 ## Basic structure
 - `server.js` calls Express app.
 - `/router/router.js` is where the routes live.
-- `/middleware/middleware.js` is where middleware lives (basic token auth and input validation).
-- `/dataHandler/dataHandler.js` is where all data processing happens (this could be put into a child process, e.g., using the `cluster` module and `fork` method).
+- `/middleware/middleware.js` is where middleware lives (basic token auth, 404 handler, and input validation).
+- `/dataHandler/dataHandler.js` is where all data processing happens.
 - I used POST for the endpoints because the api key should be in the request body so it is encrypted by SSL in production and doesn't get logged in server logs.
+- `log.js` uses Winston logger to write to local `error.log` and `combined.log` files.
 
 ## 3rd-party packages used
 - `dotenv` to read .env file (where we store the api key).

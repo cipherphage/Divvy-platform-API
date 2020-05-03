@@ -85,6 +85,9 @@ module.exports = {
       cb();
     })();
   },
+  getNumOfStations: function() {
+    return stations.data.stations.length;
+  },
   getStation: async function(id) {
     stations.data.stations.forEach(s => {
       if (s['station-id'] === id) {
