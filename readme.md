@@ -17,12 +17,13 @@
 ## Use
 - The server waits for the data to be initialized before listening for requests. If you set `NODE_ENV` to 'production' then it will spawn workers.
 - `localhost:8080` routes:
-  - `/station` POST, accepts a station ID (number).
-  - `/rider` POST, accepts a station ID (number) or IDs (array) and an optional date (string: YYYY-MM-DD).
-  - `/trip` POST, accepts a station ID (number) or IDs (array) and an optional date (string: YYYY-MM-DD).
+  - `/station` POST, accepts a station ID (string). ```{"api_key":<string>, "id":<string>}```
+  - `/rider` POST, accepts a station ID (string) or IDs (string array) and an optional date (string: YYYY-MM-DD). ```{"api_key":<string>, "id":<string | string array>, "date": <string YYYY-MM-DD>}```
+  - `/trip` POST, accepts a station ID (string) or IDs (string array) and an optional date (string: YYYY-MM-DD). ```{"api_key":<string>, "id":<string | string array>, "date": <string YYYY-MM-DD>}```
   - Note: if no date is provided, then yesterday is assumed. This should be changed because the data does not cover recent dates.
+  
 - Run `npm test` to run the tests (note: you must change the `NODE_ENV` in `.env` to anything other than 'production'. Also, it runs on a timeout so please give it some time (it waits for the data to be initialized)).
-  - `npm test` runs `mocha 'test/**/*.js' --timeout 60000 --reporter nyan`. The `NODE_ENV` in `.env` needs to be anything other than 'production' otherwise the tests will attempt to test each worker and fail to find a port.
+  - `npm test` runs `mocha 'test/**/*.js' --timeout 60000 --reporter nyan`. The `NODE_ENV` in `.env` needs to be anything other than 'production' otherwise the tests will attempt to test each worker and fail to find the port.
 
 ## Basic structure
 - `server.js` calls Express app and forks child processes as per # of CPUs. This is a naive implementation of the cluster module. A library like [pm2][3] should be used in production.
