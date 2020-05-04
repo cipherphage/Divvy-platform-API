@@ -20,10 +20,79 @@
 - The server waits for the data to be initialized before listening for requests. If you set `NODE_ENV` to 'production' then it will spawn workers.
 - `localhost:8080` routes:
   - `/station` POST, accepts a station ID (string). 
-    - request body: ```{"api_key":<string>, "id":<string>}```
-    - response body: ```{"eightd_has_key_dispenser":<boolean>,"lat":<number>,"short_name":<string>,"name":<string>,"electric_bike_surcharge_waiver":<boolean>,"rental_uris":{"ios":<string>,"android":<string>},"external_id":<string>,"has_kiosk":<boolean>,"capacity":<number>,"lon":<number>,"station_id":<string>,"rental_methods":<string array>,"eightd_station_services":<string array>,"station_type":<string>}```
-  - `/rider` POST, accepts a station ID (string) or IDs (string array) and an optional date (string: YYYY-MM-DD). ```{"api_key":<string>, "id":<string | string array>, "date": <string YYYY-MM-DD>}```
-  - `/trip` POST, accepts a station ID (string) or IDs (string array) and an optional date (string: YYYY-MM-DD). ```{"api_key":<string>, "id":<string | string array>, "date": <string YYYY-MM-DD>}```
+    - request body: 
+  ```
+    { 
+      "api_key":<string>, 
+      "id":<string>
+    }
+  ```
+    - response body: 
+  ```
+    {
+      "eightd_has_key_dispenser":<boolean>,
+      "lat":<number>,
+      "short_name":<string>,
+      "name":<string>,
+      "electric_bike_surcharge_waiver":<boolean>,
+      "rental_uris":{
+        "ios":<string>,
+        "android":<string>
+      },
+      "external_id":<string>,
+      "has_kiosk":<boolean>,
+      "capacity":<number>,
+      "lon":<number>,
+      "station_id":<string>,
+      "rental_methods":<string array>,
+      "eightd_station_services":<string array>,
+      "station_type":<string>
+    }
+  ```
+  - `/rider` POST, accepts a station ID (string) or IDs (string array) and an optional date (string: YYYY-MM-DD). 
+    - request body: 
+  ```
+    {
+      "api_key":<string>, 
+      "id":<string | string array>, 
+      "date": <string YYYY-MM-DD>
+    }
+  ```
+    - response body: 
+  ```
+    { 
+      "date": <string>, 
+      "stations": {
+        "<station id>": {
+          "0-20":<number>, 
+          "21-30":<number>, 
+          "31-40":<number>, 
+          "41-50":<number>, 
+          "51+":<number>, 
+          "unknown":<number>
+        }, ...
+      }
+    }
+  ```
+  - `/trip` POST, accepts a station ID (string) or IDs (string array) and an optional date (string: YYYY-MM-DD). 
+    - request body: 
+  ```
+    {
+      "api_key":<string>, 
+      "id":<string | string array>, 
+      "date": <string YYYY-MM-DD>
+    }
+  ```
+    - response body: 
+  ```
+    {
+      "date": <string>,
+      "stations": {
+        "<station id>": [<object array, up to 20 most recent elements>],
+        ...
+      }
+    }
+  ```
   - Note: if no date is provided, then yesterday is assumed. This should be changed because the data does not cover recent dates.
   
 - Run `npm test` to run the tests (note: you must change the `NODE_ENV` in `.env` to anything other than 'production'. Also, it runs on a timeout so please give it some time (it waits for the data to be initialized)).
