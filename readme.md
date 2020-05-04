@@ -6,8 +6,8 @@
   - It expects a file called `Divvy_Trips_2019_Q2.csv` in the project root.
 - Uses `.env` file to store API key as `API_KEY` and environment as `NODE_ENV`. I added `PORT` and `HOST` to help with using Docker.
 - The app runs on `node server.js` or `npm start`.
-- You can download a pre-built docker image with `API_KEY` set to "42" and `NODE_ENV` set to "production" here: [https://hub.docker.com/r/cipherphage/divvy-platform-api-complete-production][6]
-- You can download a pre-built docker image with `API_KEY` set to "42" `NODE_ENV` set to "mochatest" here: [https://hub.docker.com/r/cipherphage/divvy-platform-api-complete-mochatest][5]
+- You can download a pre-built docker image that comes with the data CSV and `API_KEY` set to "42" and `NODE_ENV` set to "production" here: [https://hub.docker.com/r/cipherphage/divvy-platform-api-complete-production][6] (Using an insecure API key and sharing it shouldn't matter because this is just an example application made for local use! See notes below).
+- You can download a pre-built docker image that comes with the data CSV and `API_KEY` set to "42" and `NODE_ENV` set to "mochatest" here: [https://hub.docker.com/r/cipherphage/divvy-platform-api-complete-mochatest][5] (Using an insecure API key and sharing it shouldn't matter because this is just an example application made for local use! See notes below).
 - You can download the latest docker image here: [https://hub.docker.com/r/cipherphage/divvy-platform-api][4]
   - It is built automatically from this github repo so it doesn't have a `.env` file nor does it have the CSV file which contains most of our data. You will need to add those and maybe map port 8080 to a local port and change the `HOST` environment variable from `localhost` to `0.0.0.0`.
   - You can also build it locally from the repo:
@@ -114,7 +114,7 @@
 - `mocha` and `supertest` to test. 
 
 ## Notes
-- I'm rolling my own VERY basic token auth and input validation, but there are much better, more robust solutions, of course.
+- I'm rolling my own VERY basic token auth and input validation, but there are much better, more robust solutions, of course. For example, each API user should have their own unique and secure API key.
 - To make start-up faster, consider converting the CSV into JSON and not using CSV at all.
 - To make the CSV look-up faster we could divide the CSV up into files by day, and/or create workers to perform the lookup, and/or store the data in a SQL database instead of a CSV file. 
   
