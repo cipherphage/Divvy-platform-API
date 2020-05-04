@@ -6,8 +6,10 @@
   - It expects a file called `Divvy_Trips_2019_Q2.csv` in the project root.
 - Uses `.env` file to store API key as `API_KEY` and environment as `NODE_ENV`. I added `PORT` and `HOST` to help with using Docker.
 - The app runs on `node server.js` or `npm start`.
-- You can download a docker image here: [https://hub.docker.com/r/cipherphage/divvy-platform-api][4]
-  - It is built automatically from this github repo so I believe it doesn't have a `.env` file nor does it have the CSV file which contains most of our data. You will need to add those and maybe map port 8080 to a local port and change the `HOST` environment variable from `localhost` to `0.0.0.0`.
+- You can download a pre-built docker image with `API_KEY` set to "42" and `NODE_ENV` set to "production" here: [https://hub.docker.com/r/cipherphage/divvy-platform-api-complete-production][6]
+- You can download a pre-built docker image with `API_KEY` set to "42" `NODE_ENV` set to "mochatest" here: [https://hub.docker.com/r/cipherphage/divvy-platform-api-complete-mochatest][5]
+- You can download the latest docker image here: [https://hub.docker.com/r/cipherphage/divvy-platform-api][4]
+  - It is built automatically from this github repo so it doesn't have a `.env` file nor does it have the CSV file which contains most of our data. You will need to add those and maybe map port 8080 to a local port and change the `HOST` environment variable from `localhost` to `0.0.0.0`.
   - You can also build it locally from the repo:
     - `docker build -t <user>/divvy_platform_api .`
     - `docker run -p 8080:8080 -d <user>/divvy_platform_api` 
@@ -17,7 +19,9 @@
 ## Use
 - The server waits for the data to be initialized before listening for requests. If you set `NODE_ENV` to 'production' then it will spawn workers.
 - `localhost:8080` routes:
-  - `/station` POST, accepts a station ID (string). ```{"api_key":<string>, "id":<string>}```
+  - `/station` POST, accepts a station ID (string). 
+    - request body: ```{"api_key":<string>, "id":<string>}```
+    - response body: ```{"eightd_has_key_dispenser":<boolean>,"lat":<number>,"short_name":<string>,"name":<string>,"electric_bike_surcharge_waiver":<boolean>,"rental_uris":{"ios":<string>,"android":<string>},"external_id":<string>,"has_kiosk":<boolean>,"capacity":<number>,"lon":<number>,"station_id":<string>,"rental_methods":<string array>,"eightd_station_services":<string array>,"station_type":<string>}```
   - `/rider` POST, accepts a station ID (string) or IDs (string array) and an optional date (string: YYYY-MM-DD). ```{"api_key":<string>, "id":<string | string array>, "date": <string YYYY-MM-DD>}```
   - `/trip` POST, accepts a station ID (string) or IDs (string array) and an optional date (string: YYYY-MM-DD). ```{"api_key":<string>, "id":<string | string array>, "date": <string YYYY-MM-DD>}```
   - Note: if no date is provided, then yesterday is assumed. This should be changed because the data does not cover recent dates.
@@ -49,3 +53,5 @@
 [2]:https://s3.amazonaws.com/divvy-data/tripdata/Divvy_Trips_2019_Q2.zip
 [3]:https://pm2.io/
 [4]:https://hub.docker.com/r/cipherphage/divvy-platform-api
+[5]:https://hub.docker.com/r/cipherphage/divvy-platform-api-complete-mochatest
+[6]:https://hub.docker.com/r/cipherphage/divvy-platform-api-complete-production
